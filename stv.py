@@ -25,19 +25,13 @@ def plurality(profile, alternatives):
             set_end = profile[i][1].index('}')
             if set_end > 3:
                 print(f"Warning: tie set of size {set_end-1} found")
-                print(f"This case is not properly handled. Weight for all preferences is 1/2.")
+                print(f"This case is not properly handled. Weight for all tied preferences is 1/2.")
             for j in range(1, set_end):
-                plur_score[profile[i][1][j]] += float(factor * (1 / 2))
+                plur_score[profile[i][1][j]] += float(factor * (1/2))
         else:
             plur_score[max_pref] += factor
     print(f"{plur_score=}")
     return plur_score
-
-
-def clean_profile(profile):
-    if profile:
-        profile = [x for x in profile if x[1]]
-    return profile
 
 
 def remove_alternatives(profile, to_remove):
@@ -45,25 +39,23 @@ def remove_alternatives(profile, to_remove):
         profile[i][1] = [x for x in profile[i][1] if x not in to_remove]
         if profile[i][1]:
             profile[i][1] = [x for j, x in enumerate(profile[i][1]) if not (x == '{' and profile[i][1][j+1] == '}')]
-    return profile
+    return [x for x in profile if x[1]]
 
 
 def sigma(profile, alternatives):
     plur_score = plurality(profile, alternatives)
     lowest_plur_score = min(plur_score.values())
-    print(f"{lowest_plur_score=}")
-
     to_remove = [alternative for alternative in plur_score if plur_score[alternative] == lowest_plur_score]
-    print(f"{to_remove=}")
+    print(f"{to_remove=}, with {lowest_plur_score=}")
 
     alternatives = [x for x in plur_score if x not in to_remove]
-    print(f"{alternatives=}")
+    print(f"Subset of {alternatives=}")
 
     if not alternatives:
         return plur_score
 
     profile = remove_alternatives(profile, to_remove)
-    return sigma(clean_profile(profile), alternatives) 
+    return sigma(profile, alternatives) 
 
 
 def STV(profile, alternatives):
