@@ -62,10 +62,36 @@ def STV(profile, alternatives):
     return sigma(profile, alternatives)
 
 
+def manipulate_election(profile, dropped_vote, first_vote):
+    votes = [item[1] for item in profile]
+    votes = drop_vote(votes, dropped_vote, first_vote)
+    for item, vote in zip(profile, votes):
+        item[1] = vote
+    return profile
+
+def drop_vote(profile, dropped_vote, first_vote):
+    manipulated_votes = []
+    for preference in profile:
+        if (dropped_vote in preference) and (first_vote in preference):
+            if preference.index(dropped_vote) > preference.index(first_vote):
+                preference.pop(preference.index(dropped_vote))
+                preference.insert(0, preference.pop(preference.index(first_vote)))
+                manipulated_votes.append(preference)
+            else:
+                manipulated_votes.append(preference)
+        elif first_vote in preference:
+            preference.insert(0, preference.pop(preference.index(first_vote)))
+            manipulated_votes.append(preference)
+        else: 
+            manipulated_votes.append(preference)
+    return manipulated_votes
+
+
 def main():
     profile = get_data()
     alternatives = [x for x in range(1, 12)]
-    plur_score = STV(profile, alternatives)
+    rigged_profile = manipulate_election(profile,8,2)
+    plur_score = STV(rigged_profile, alternatives)
     print(f"Winning alternative is {plur_score}.")
 
 
