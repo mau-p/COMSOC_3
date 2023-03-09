@@ -30,7 +30,6 @@ def plurality(profile, alternatives):
                 plur_score[profile[i][1][j]] += float(factor * (1/2))
         else:
             plur_score[max_pref] += factor
-    print(f"{plur_score=}")
     return plur_score
 
 
@@ -46,10 +45,8 @@ def sigma(profile, alternatives):
     plur_score = plurality(profile, alternatives)
     lowest_plur_score = min(plur_score.values())
     to_remove = [alternative for alternative in plur_score if plur_score[alternative] == lowest_plur_score]
-    print(f"{to_remove=}, with {lowest_plur_score=}")
 
     alternatives = [x for x in plur_score if x not in to_remove]
-    print(f"Subset of {alternatives=}")
 
     if not alternatives:
         return plur_score
@@ -86,14 +83,25 @@ def drop_vote(profile, dropped_vote, first_vote):
             manipulated_votes.append(preference)
     return manipulated_votes
 
+def manipulate_election_loop():
+    alternatives = [x for x in range(1, 12)]
+    for i in range(1,12):
+        for j in range(1,12):
+            profile = get_data()
+            if i != j:
+                print(f'dropped: {i}')
+                print(f'selected_winner: {j}')
+                rigged_profile = manipulate_election(profile,i,j)
+                plur_score = STV(rigged_profile, alternatives)
+                print(f"Winning alternative is {plur_score}.")
 
 def main():
-    profile = get_data()
-    alternatives = [x for x in range(1, 12)]
-    rigged_profile = manipulate_election(profile,8,2)
-    plur_score = STV(rigged_profile, alternatives)
-    print(f"Winning alternative is {plur_score}.")
+    # alternatives = [x for x in range(1, 12)]
+    # rigged_profile = manipulate_election(profile,1,6)
+    # plur_score = STV(rigged_profile, alternatives)
+    # print(f"Winning alternative is {plur_score}.")
 
+    manipulate_election_loop()
 
 if __name__ == "__main__":
     main()
