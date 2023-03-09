@@ -1,6 +1,5 @@
 
 import pandas as pd
-import copy
 
 
 def get_data():
@@ -66,79 +65,9 @@ def STV(profile, alternatives):
     return sigma(profile, alternatives)
 
 
-def get_choice(pref):
-    try:
-        return pref.pop(0)
-    except IndexError:
-        return None
-
-
-def profile_ranking(profile, alternatives):
-    strict_pref = pd.DataFrame(index=alternatives, columns=alternatives)
-    strict_pref = strict_pref.fillna(0)
-    potential_manipulators = []
-    pref_eight, pref_two = 0, 0
-    for pref in profile:
-        equal = False
-        for vote in pref[1]:
-            if vote == '{':
-                equal = True
-                continue
-            elif vote == '}':
-                equal = False
-                continue
-            else:
-                if equal:
-                    pass
-    print(strict_pref)
-
-    for i in range(len(profile)):
-        if 8 in profile[i][1] and 2 in profile[i][1]:
-            if profile[i][1].index(8) > profile[i][1].index(2):
-                pref_two += 1
-                potential_manipulators.append(i)
-            else:
-                pref_eight += 1
-    print(f"Prefer 8>2: {pref_eight}. Prefer 2>8: {pref_two}.")
-    print(f"{len(potential_manipulators)=}")
-    for i in range(10):
-        plur_score = plurality(profile, alternatives)
-        print(f"At rank {i+1}, {plur_score=}")
-        for x in profile:
-            popped = x[1].pop(0)
-            if not isinstance(popped, int):
-                while popped != '}':
-                    popped = x[1].pop(0)
-        profile = [x for x in profile if x[1]]
-    return potential_manipulators
-
-
-def manipulate_profile(profile, voter):
-    print(f"Manipulating voter {voter}.")
-    eight_idx = profile[voter][1].index(8)
-    two_idx = profile[voter][1].index(2)
-    profile[voter][1][eight_idx], profile[voter][1][two_idx] = 2, 8
-    return profile
-
-
-def find_smallers_set_manipulator(profile, alternatives):
-    manipulators = profile_ranking(copy.deepcopy(profile), alternatives)
-    count = 0
-    plur_score = STV(copy.deepcopy(profile), alternatives)
-    while not 2 in plur_score.keys():
-        diff = max(plur_score.values()) - min(plur_score.values())
-        print(f"Diff = {diff}.")
-        profile = manipulate_profile(profile, manipulators.pop())
-        count += 1
-        plur_score = STV(copy.deepcopy(profile), alternatives)
-    print(f"Number of manipulations = {count}.")
-    return profile
-
-
 def main():
     profile = get_data()
     alternatives = [x for x in range(1, 12)]
-    #profile = find_smallers_set_manipulator(profile, alternatives)
     plur_score = STV(profile, alternatives)
     print(f"Winning alternative is {plur_score}.")
 
