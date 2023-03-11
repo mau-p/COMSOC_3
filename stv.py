@@ -46,7 +46,7 @@ def plurality(profile, alternatives):
     return plur_score
 
 
-def sigma(profile, alternatives):
+def STV(profile, alternatives):
     plur_score = plurality(profile, alternatives)
     lowest_plur_score = min(plur_score.values())
     to_remove = [alternative for alternative in plur_score if plur_score[alternative] == lowest_plur_score]
@@ -59,11 +59,7 @@ def sigma(profile, alternatives):
         return plur_score
 
     profile = remove_alternatives(profile, to_remove)
-    return sigma(profile, alternatives)
-
-
-def STV(profile, alternatives):
-    return sigma(profile, alternatives)
+    return STV(profile, alternatives)
 
 
 def main():
