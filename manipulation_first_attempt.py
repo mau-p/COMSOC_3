@@ -5,7 +5,7 @@ import numpy as np
 
 def get_data():
     votes = []
-    data = pd.read_csv('00016-00000001.dat', sep='\t', header=None, index_col=False)
+    data = pd.read_csv('manipulation.dat', sep='\t', header=None, index_col=False)
     for i in range(len(data)):
         pref = data.iloc[i,0]
         pref = pref.split(': ')
