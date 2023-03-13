@@ -1,6 +1,19 @@
 import numpy as np
 import itertools
-from stv import get_data
+import pandas as pd
+
+def get_data():
+    votes = []
+    data = pd.read_csv('00016-00000001.dat', sep='\t', header=None, index_col=False)
+    for i in range(len(data)):
+        pref = data.iloc[i,0]
+        pref = pref.split(': ')
+        pref[0] = int(pref[0])
+        pref[1] = pref[1].replace('{', '{,').replace('}', ',}')
+        pref[1] = [int(x) if not any(b in x for b in ['{','}']) else x for x in pref[1].split(',')]
+        votes.append(pref)
+    return votes
+
 
 def count_votes(ballots):
 	votes = {
