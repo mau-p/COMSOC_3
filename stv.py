@@ -83,7 +83,7 @@ def main():
     profile, alternatives = get_data()
     # Dataframe with rows as alternatives and columns as preference ranks
     initial_counts = data_overview(profile, alternatives)
-    plur_score = STV(deepcopy(profile), alternatives)
+    plur_score = STV(deepcopy(profile), alternatives)       # Deepcopy used such that we can retrieve the original profile later on
     print(f"Winning alternative is {plur_score}.")
     winner, = max(plur_score, key=plur_score.get)
     # Dataframe with rows as alternatives and columns as preference ranks, counting only votes preferred over the winner or not containing the winner
