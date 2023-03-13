@@ -96,10 +96,16 @@ def manipulate_election_loop():
                 print(f"Winning alternative is {plur_score}.")
 
 def main():
-    # alternatives = [x for x in range(1, 12)]
-    # rigged_profile = manipulate_election(profile,1,6)
-    # plur_score = STV(rigged_profile, alternatives)
-    # print(f"Winning alternative is {plur_score}.")
+    '''
+    Our first attempt at trying to find multiple manipulations. 
+    It works as follows: 
+    For each loop, select one alternative ()) to try and make win, and select one (b) that is going to be dropped. 
+    Then for each preference is a>b, a is put first in the preference and b is dropped
+    The STV winner is the computed
+    
+    This is not actually in line with how manipulation should work but was used to get an overview of the different alternatives 
+    and the relationship between them.
+    '''
 
     manipulate_election_loop()
 
